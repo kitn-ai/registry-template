@@ -254,7 +254,15 @@ This runs `bun run stage` (creates symlinks in `_staging/` that mirror the insta
 
 ### GitHub Pages (included)
 
-The `.github/workflows/deploy-registry.yml` workflow automatically builds and deploys to GitHub Pages on every push to `main`. Enable Pages in your repo settings (Settings > Pages > Source: GitHub Actions).
+A deploy workflow is included at `.github/workflows/deploy-registry.yml` that automatically builds and deploys to GitHub Pages on every push to `main`.
+
+**Setup (required once):**
+
+1. Go to your repo's **Settings > Pages**
+2. Under **Source**, select **GitHub Actions**
+3. Push a commit (or re-run the workflow from the Actions tab)
+
+> **Note:** The first workflow run will fail until you enable Pages — this is expected.
 
 Your registry URL will be: `https://<user>.github.io/<repo>/r`
 
