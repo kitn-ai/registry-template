@@ -22,6 +22,7 @@ const typeToDir: Record<string, string> = {
   "kitn:tool": "tools",
   "kitn:skill": "skills",
   "kitn:storage": "storage",
+  "kitn:package": "package",
 };
 
 async function main() {
@@ -30,7 +31,7 @@ async function main() {
 
   let linkCount = 0;
 
-  for (const typeDir of ["agents", "tools", "skills", "storage"]) {
+  for (const typeDir of ["agents", "tools", "skills", "storage", "package"]) {
     const dir = join(COMPONENTS_DIR, typeDir);
     let entries: string[];
     try {

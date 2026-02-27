@@ -6,6 +6,7 @@ export const componentType = z.enum([
   "kitn:tool",
   "kitn:skill",
   "kitn:storage",
+  "kitn:package",
 ]);
 export type ComponentType = z.infer<typeof componentType>;
 
@@ -35,12 +36,18 @@ export const registryItemSchema = z.object({
   dependencies: z.array(z.string()).optional().describe("npm package dependencies"),
   devDependencies: z.array(z.string()).optional(),
   registryDependencies: z.array(z.string()).optional().describe("Other kitn components this depends on"),
-  envVars: z.record(z.string(), z.string()).optional().describe("Required env vars with descriptions"),
+  envVars: z.record(z.string(), z.object({
+    description: z.string(),
+    required: z.boolean().optional(),
+    secret: z.boolean().optional(),
+    url: z.string().optional(),
+  })).optional().describe("Required env vars with rich config"),
   files: z.array(registryFileSchema),
   installDir: z.string().optional().describe("Target directory for package installation"),
   tsconfig: z.record(z.string(), z.array(z.string())).optional().describe("TSConfig path aliases to add"),
   docs: z.string().optional().describe("Post-install instructions shown in terminal"),
   categories: z.array(z.string()).optional(),
+  slot: z.string().optional().describe("Exclusive slot — components sharing a slot value conflict at install time"),
   version: z.string().optional().default("1.0.0"),
   updatedAt: z.string().optional(),
   changelog: z.array(changelogEntrySchema).optional(),
@@ -54,6 +61,7 @@ export const registryIndexItemSchema = z.object({
   description: z.string(),
   registryDependencies: z.array(z.string()).optional(),
   categories: z.array(z.string()).optional(),
+  slot: z.string().optional(),
   version: z.string().optional(),
   versions: z.array(z.string()).optional(),
   updatedAt: z.string().optional(),
@@ -71,10 +79,13 @@ export type RegistryIndex = z.infer<typeof registryIndexSchema>;
 // Installed component tracking
 export const installedComponentSchema = z.object({
   registry: z.string().optional(),
+  type: componentType,
+  slot: z.string().optional(),
   version: z.string(),
   installedAt: z.string(),
   files: z.array(z.string()),
   hash: z.string(),
+  registryDependencies: z.array(z.string()).optional(),
 });
 export type InstalledComponent = z.infer<typeof installedComponentSchema>;
 
@@ -82,7 +93,7 @@ export type InstalledComponent = z.infer<typeof installedComponentSchema>;
 export const runtimeType = z.enum(["bun", "node", "deno"]);
 
 // Framework type
-export const frameworkType = z.enum(["hono", "cloudflare", "elysia", "fastify", "express"]);
+export const frameworkType = z.enum(["hono", "hono-openapi", "cloudflare", "elysia", "fastify", "express"]);
 
 // kitn.json config
 export const configSchema = z.object({
@@ -101,8 +112,8 @@ export const configSchema = z.object({
 });
 export type KitnConfig = z.infer<typeof configSchema>;
 
-// Map component type to alias key
-export const typeToAliasKey: Record<ComponentType, keyof KitnConfig["aliases"]> = {
+// Map component type to alias key (excludes kitn:package which uses installDir)
+export const typeToAliasKey: Partial<Record<ComponentType, keyof KitnConfig["aliases"]>> = {
   "kitn:agent": "agents",
   "kitn:tool": "tools",
   "kitn:skill": "skills",

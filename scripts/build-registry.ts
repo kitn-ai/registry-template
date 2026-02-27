@@ -8,10 +8,11 @@ interface ComponentManifest {
   dependencies?: string[];
   devDependencies?: string[];
   registryDependencies?: string[];
-  envVars?: Record<string, string>;
+  envVars?: Record<string, { description: string; required?: boolean; secret?: boolean; url?: string }>;
   files?: string[];
   installDir?: string;
   tsconfig?: Record<string, string[]>;
+  slot?: string;
   docs?: string;
   categories?: string[];
   version?: string;
@@ -23,6 +24,7 @@ const typeToDir: Record<ComponentType, string> = {
   "kitn:tool": "tools",
   "kitn:skill": "skills",
   "kitn:storage": "storage",
+  "kitn:package": "package",
 };
 
 export function buildRegistryItem(
@@ -48,6 +50,7 @@ export function buildRegistryItem(
     files,
     docs: manifest.docs,
     categories: manifest.categories,
+    slot: manifest.slot,
     version: manifest.version ?? "1.0.0",
     installDir: manifest.installDir,
     tsconfig: manifest.tsconfig,
@@ -63,12 +66,13 @@ export function buildRegistryIndex(
   return {
     $schema: "https://kitn.dev/schema/registry.json",
     version: "1.0.0",
-    items: items.map(({ name, type, description, registryDependencies, categories, version, updatedAt }) => ({
+    items: items.map(({ name, type, description, registryDependencies, categories, slot, version, updatedAt }) => ({
       name,
       type,
       description,
       registryDependencies,
       categories,
+      slot,
       version,
       versions: existingVersions.get(name) ?? [version ?? "1.0.0"],
       updatedAt,
@@ -88,7 +92,7 @@ if (import.meta.main) {
   const allItems: RegistryItem[] = [];
   const existingVersions = new Map<string, string[]>();
 
-  for (const typeDir of ["agents", "tools", "skills", "storage"]) {
+  for (const typeDir of ["agents", "tools", "skills", "storage", "package"]) {
     const dir = join(COMPONENTS_DIR, typeDir);
     let entries: string[];
     try {

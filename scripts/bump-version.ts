@@ -45,7 +45,7 @@ async function scanComponents(): Promise<ComponentInfo[]> {
   const COMPONENTS_DIR = join(ROOT, "components");
   const components: ComponentInfo[] = [];
 
-  for (const typeDir of ["agents", "tools", "skills", "storage"]) {
+  for (const typeDir of ["agents", "tools", "skills", "storage", "package"]) {
     const dir = join(COMPONENTS_DIR, typeDir);
     let entries: string[];
     try {
