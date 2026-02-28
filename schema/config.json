@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "kitn Config",
+  "type": "object",
+  "required": ["runtime", "aliases"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "runtime": {
+      "type": "string",
+      "enum": ["bun", "node", "deno"]
+    },
+    "aliases": {
+      "type": "object",
+      "required": ["agents", "tools", "skills", "storage"],
+      "properties": {
+        "agents": { "type": "string" },
+        "tools": { "type": "string" },
+        "skills": { "type": "string" },
+        "storage": { "type": "string" }
+      }
+    },
+    "registries": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}
