@@ -25,6 +25,7 @@ const typeToDir: Record<ComponentType, string> = {
   "kitn:skill": "skills",
   "kitn:storage": "storage",
   "kitn:package": "package",
+  "kitn:cron": "crons",
 };
 
 export function buildRegistryItem(
@@ -92,7 +93,7 @@ if (import.meta.main) {
   const allItems: RegistryItem[] = [];
   const existingVersions = new Map<string, string[]>();
 
-  for (const typeDir of ["agents", "tools", "skills", "storage", "package"]) {
+  for (const typeDir of ["agents", "tools", "skills", "storage", "package", "crons"]) {
     const dir = join(COMPONENTS_DIR, typeDir);
     let entries: string[];
     try {
