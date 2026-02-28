@@ -27,7 +27,6 @@ export interface StorageProvider {
   skills: any;
   tasks: any;
   prompts: any;
-  audio: any;
   commands: any;
 }
 
