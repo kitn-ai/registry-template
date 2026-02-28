@@ -16,7 +16,7 @@ const COMPONENTS_DIR = join(ROOT, "components");
 
 interface ComponentManifest {
   name: string;
-  type: "kitn:agent" | "kitn:tool" | "kitn:skill" | "kitn:storage" | "kitn:package";
+  type: "kitn:agent" | "kitn:tool" | "kitn:skill" | "kitn:storage";
   files: string[];
   registryDependencies?: string[];
 }
@@ -26,7 +26,6 @@ const typeToDir: Record<string, string> = {
   "kitn:tool": "tools",
   "kitn:skill": "skills",
   "kitn:storage": "storage",
-  "kitn:package": "package",
 };
 
 // Extract relative import paths from a TypeScript source file.
@@ -85,7 +84,7 @@ async function main() {
   // Maps installed path → source content
   const fileContents = new Map<string, string>();
 
-  for (const typeDir of ["agents", "tools", "skills", "storage", "package"]) {
+  for (const typeDir of ["agents", "tools", "skills", "storage"]) {
     const dir = join(COMPONENTS_DIR, typeDir);
     let entries: string[];
     try {
